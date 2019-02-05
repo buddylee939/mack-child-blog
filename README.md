@@ -273,6 +273,36 @@ s.setAttribute('data-timestamp', +new Date());
                             
 ```
 
+## add Friendly ID
+
+- add friendly_id gem
+- rails generate friendly_id
+- rails g migration add_slug_to_posts slug:string:uniq
+- rails db:migrate
+- in post.rb
+
+```
+class Post < ApplicationRecord
+  extend FriendlyId
+  friendly_id :title, use: :slugged
+end
+
+```
+
+- update the show in posts_controller
+
+```
+  def find_post
+    @post = Post.friendly.find(params[:id])
+  end
+```
+
+- in rails c
+
+```
+Post.find_each(&:save)
+```
+
 - 
 
 <hr>
