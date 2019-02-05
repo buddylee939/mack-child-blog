@@ -346,6 +346,9 @@ Post.find_each(&:save)
 
 ## Create projects
 
+- rails g model Project title description:text link
+- rails db:migrate
+- rails g controller projects
 - 
 
 <hr>

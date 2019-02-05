@@ -14,3 +14,14 @@
 end
 
 puts '20 posts created'
+
+
+20.times do |p|
+  Project.create!(
+    title: "Project #{p}",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error velit aspernatur reiciendis ipsa placeat sed sunt laboriosam aut, voluptate magni expedita veniam laborum quae tempore! Ad officiis magnam iusto vero!",
+    link: "https://www.youtube.com/watch?v=ReVeUvwTGdU"
+  )
+end
+
+puts '20 projects created'
