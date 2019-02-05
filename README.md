@@ -468,7 +468,38 @@ end
 
 ## Devise authentication
 
--   
+- add devise gem
+- rails g devise:install
+- add the flash messages
+- rails g devise:views
+- rails g devise User
+- restart server
+- signup with new user
+- add before_action to posts and projects controllers
+
+```
+before_action :authenticate_user!, except: [:index, :show]
+```  
+
+- to get rid of the ability to register as a user, go to models/user.rb and get rid of registerable
+
+```
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable,
+         :recoverable, :rememberable, :validatable
+end
+
+```
+
+- to avoid the 'no routes matches', in routes add
+
+```
+get '*path' => redirect('/')
+```
+
+- 
 
 <hr>
 
