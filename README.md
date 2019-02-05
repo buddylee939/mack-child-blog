@@ -303,6 +303,49 @@ end
 Post.find_each(&:save)
 ```
 
+- git heroku push
+- heroku run rake db:migrate
+- heroku run rails c
+
+
+```
+Post.find_each(&:save)
+```
+
+## Pagination
+
+- add the will paginate gem
+- bundle
+- in posts_controller update the index
+
+```
+  def index
+    @posts = Post.all.order("created_at desc").paginate(page: params[:page], per_page: 10)
+  end
+```
+
+- udpate index.html.erb
+
+```
+<h1 id="page_title">Stuff I've Written</h1>
+
+<div id="posts_wrapper" class="skinny_wrapper">
+	<% @posts.each do |post| %>
+		<div class="post">
+			<p class="date"><%= post.created_at.strftime('%A, %B %d') %></p>
+			<h2><a href="#"><%= link_to post.title, post %></a></h2>
+			<hr>
+		</div>
+	<% end %>
+</div>
+
+<%= will_paginate @posts %>
+```
+
+- [setting up strftime](https://www.foragoodstrftime.com/)
+
+## Create projects
+
 - 
 
 <hr>
