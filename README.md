@@ -468,6 +468,7 @@ end
 
 ## Devise authentication
 
+- he uploaded first with registerable and created user, then removed it
 - add devise gem
 - rails g devise:install
 - add the flash messages
@@ -499,7 +500,7 @@ end
 get '*path' => redirect('/')
 ```
 
-- 
+### The End
 
 <hr>
 
