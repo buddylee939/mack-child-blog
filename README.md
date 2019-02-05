@@ -349,7 +349,126 @@ Post.find_each(&:save)
 - rails g model Project title description:text link
 - rails db:migrate
 - rails g controller projects
-- 
+- add the CRUD for projects
+
+## Contact form & sendgrid
+
+- add mail_form gem
+- bundle
+- restart server
+- rails g controller contacts
+- in routes
+
+```
+resources :contacts, only: [:new, :create]
+```
+
+- update contacts_controller
+
+```
+class ContactsController < ApplicationController
+	def new
+		@contact = Contact.new
+	end
+
+	def create
+		@contact = Contact.new(params[:contact])
+    @contact.request = request
+    if @contact.deliver
+      flash.now[:error] = nil
+    else
+      flash.now[:error] = 'Cannot send message.'
+      render :new
+    end
+	end
+end
+```
+
+- create the file models/contact.rb
+
+```
+class Contact < MailForm::Base
+  attribute :name,      :validate => true
+  attribute :email,     :validate => /\A([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})\z/i
+  attribute :message,   :validate => true
+  attribute :nickname,  :captcha  => true
+
+  def headers
+    {
+      :subject => "Contact Form",
+      :to => "buddylee939@hotmail.com",
+      :from => %("#{name}" <#{email}>)
+    }
+  end
+end
+```
+
+- create the file views/contacts/new.html.erb
+
+```
+<h1 id="page_title">Say Hello!</h1>
+
+<div class="skinny_wrapper wrapper_padding">
+	<%= form_for @contact do |f| %>
+		<%= f.label :name %><br>
+		<%= f.text_field :name, required: true %>
+
+		<br>
+
+		<%= f.label :email %><br>
+		<%= f.email_field :email, required: true %>
+
+		<br>
+
+		<%= f.label :message %><br>
+		<%= f.text_area :message, as: :text %>
+
+		<div class="hidden">
+			<%= f.label :nickname %><br>
+			<%= f.text_field :nickname, hint: 'leave this field blank' %>
+		</div>
+
+		<%= f.submit 'Send Message', class: "button" %>
+	<% end %>
+</div>
+```
+
+- create views/contacts/create.html.erb
+
+```
+<h1 id="page_title">Say Hello!</h1>
+
+<div class="skinny_wrapper wrapper_padding">
+	<h1>Thank you for your message!</h1>
+	<p>I'll get back to you soon.</p>
+</div>
+```
+
+- sendgrid heroku addon
+- heroku addons:create sendgrid
+- at the bottom of environments/production.rb
+
+```
+  config.action_mailer.default_url_options = { host: 'https://pacific-forest-9589.herokuapp.com' }
+  config.action_mailer.delivery_method = :smtp
+
+  ActionMailer::Base.smtp_settings = {
+    :address        => 'smtp.sendgrid.net',
+    :port           => '587',
+    :authentication => :plain,
+    :user_name      => ENV['SENDGRID_USERNAME'],
+    :password       => ENV['SENDGRID_PASSWORD'],
+    :domain         => 'heroku.com',
+    :enable_starttls_auto => true
+  }
+```
+
+- git push heroku master
+- it should work
+
+## Devise authentication
+
+-   
 
 <hr>
 
